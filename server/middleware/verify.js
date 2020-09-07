@@ -3,6 +3,7 @@ import config from '../configs/';
 export default async(ctx, next) => {
     // console.log(ctx.get('Authorization'));
     const authorization = ctx.get('Authorization');
+    // 401未授权
     if (authorization === '') {
         ctx.throw(401, 'no token detected in http header \'Authorization\'');
     }
