@@ -4,11 +4,14 @@ import jwt from 'jsonwebtoken';
 import config from '../configs/';
 
 export async function createArticle(ctx) {
-    const title = ctx.request.body.title;
-    const content = ctx.request.body.content;
-    const abstract = ctx.request.body.abstract;
-    const publish = ctx.request.body.publish;
-    const tags = ctx.request.body.tags;
+    // 可以使用解构赋值
+    // const title = ctx.request.body.title;
+    // const content = ctx.request.body.content;
+    // const abstract = ctx.request.body.abstract;
+    // const publish = ctx.request.body.publish;
+    // const tags = ctx.request.body.tags;
+    const { title, content, abstract, publish, tags } = ctx.request.body
+    
     const createTime = new Date();
     const lastEditTime = new Date();
     if (title === '') {

@@ -3,13 +3,17 @@ const webpack = require('webpack');
 const MFS = require('memory-fs');
 const clientConfig = require('./webpack.client.config');
 const serverConfig = require('./webpack.server.config');
+const koa2Dev = require('./koa2/dev.js')
+const koa2Hot = require('./koa2/hot.js')
+
+// 开发模式下
 
 module.exports = function setupDevServer (app, cb) {
     let bundle;
     let template;
 
-    const clientCompiler = webpack(clientConfig);
-    const devMiddleware = require('./koa2/dev.js')(clientCompiler, {
+    const clientCompiler = webpack(clientConfig); // 编辑webpack.config.js配置
+    const devMiddleware = koa2Dev(clientCompiler, {
         publicPath: clientConfig.output.publicPath,
         stats: {
             colors: true,
@@ -18,7 +22,7 @@ module.exports = function setupDevServer (app, cb) {
     });
     app.use(devMiddleware);
 
-
+    // 完成事件
     clientCompiler.plugin('done', () => {
         const fs = devMiddleware.fileSystem;
         const filePath = path.join(clientConfig.output.path, 'front.html');
@@ -27,13 +31,13 @@ module.exports = function setupDevServer (app, cb) {
             template = fs.readFileSync(filePath, 'utf-8');
             if (bundle) {
                 console.log('ok');
-                cb(bundle, template);
+                cb(bundle, template); // 执行服务端渲染
             }
         }
     });
 
     // hot middleware
-    app.use(require('./koa2/hot.js')(clientCompiler));
+    app.use(koa2Hot(clientCompiler));
 
     // console.log(serverConfig)
     // watch and update server renderer

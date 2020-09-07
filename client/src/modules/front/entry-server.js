@@ -13,6 +13,7 @@ export default context => {
             if (!matchedComponents.length) {
                 reject({ code: 404 });
             }
+            
             Promise.all(matchedComponents.map(component => {
                 if (component.preFetch) {
                     // 调用组件上的preFetch(这部分只能拿到router第一级别组件，子组件的preFetch拿不到)

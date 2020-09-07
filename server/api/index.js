@@ -5,6 +5,7 @@ import config from '../configs';
 import requireDir from 'require-dir';
 const routes = requireDir('./routes');
 
+// koa应用路由装载
 export default function api() {
     const router = new Router({
         prefix: config.app.baseApi,

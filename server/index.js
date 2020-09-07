@@ -9,34 +9,37 @@ import middleware from './middleware';
 import api from './api';
 import path from 'path';
 import fs from 'fs';
-import { createBundleRenderer } from 'vue-server-renderer';
+import { createBundleRenderer } from 'vue-server-renderer'; // ssr
 const resolve = file => path.resolve(__dirname, file);
 
 mongoose.Promise = Promise;
 // connect mongodb
+// 连接并创建mongodb数据库
 mongoose.connect(config.mongodb.url, config.mongodbSecret);
 mongoose.connection.on('error', console.error);
 
 const isProd = process.env.NODE_ENV === 'production';
 const router = require('koa-router')();
-const routerInfo = require('koa-router')();
+const routerInfo = require('koa-router')(); 
 
 const app = new koa();
 
 // middleware
 app.use(middleware());
-onerror(app);
+onerror(app); // 异常处理
 
-// api/router
+// api/router 装载路由
 app.use(api());
 
-app.use(serve('./client/static'));
+// 静态服务器目录
+app.use(serve('./client/static')); 
 
 // 创建渲染器，开启组件缓存
 let renderer;
 
+// server-side-render 服务端渲染
 function createRenderer(bundle, template) {
-    return createBundleRenderer(bundle, {
+    return createBundleRenderer(bundle, { // ssr
         template,
         cache: require('lru-cache')({
             max: 1000,
@@ -71,6 +74,7 @@ app.use(convert(historyApiFallback({
 if (isProd) {
     // 生产环境下直接读取构造渲染器
     const bundle = require('../client/dist/vue-ssr-server-bundle.json');
+    // 将dist下的首页进行ssr
     const template = fs.readFileSync(resolve('../client/dist/front.html'), 'utf-8');
     renderer = createRenderer(bundle, template);
     app.use(serve('./client/dist'));

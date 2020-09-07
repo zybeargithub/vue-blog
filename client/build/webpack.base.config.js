@@ -8,9 +8,11 @@ const productionEnv = process.env.NODE_ENV === 'production' ? true : false;
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
+// 在看webpack配置，需多对比和webpack4的差别或改进，以了解webpack技术升级线路
+
 let config = {
     devtool: '#cheap-module-eval-source-map',
-    entry: {
+    entry: { // 两个入口
         'modules/admin': [
             'babel-polyfill',
             CLIENT_FOLDER + '/src/modules/admin/app',
@@ -49,7 +51,7 @@ let config = {
         }, {
             test: /\.js$/,
             loader: 'babel-loader',
-            exclude: nodeModulesPath,
+            exclude: nodeModulesPath, // 排除了node-modules目录，提升wp打包性能方法之一
             // include: [
             //   resolve(__dirname, '../src/'),
             //   resolve(__dirname, '../../node_modules/vue-slider-component/'),
