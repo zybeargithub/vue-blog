@@ -1,8 +1,8 @@
 import logger from 'koa-logger';
-import bodyParser from 'koa-bodyparser';
-import convert from 'koa-convert';
+import bodyParser from 'koa-bodyparser'; // 解析Request body对象
+import convert from 'koa-convert'; // 将老的使用Generate函数中间件，转换为基于Promise的中间件供Koa2使用
 import onerror from 'koa-onerror';
-import compress from 'koa-compress';
+import compress from 'koa-compress'; // 开启gzip压缩
 
 export default function middleware() {
     return convert.compose(
