@@ -11,9 +11,11 @@ export async function createArticle(ctx) {
     // const publish = ctx.request.body.publish;
     // const tags = ctx.request.body.tags;
     const { title, content, abstract, publish, tags } = ctx.request.body
-    
+
     const createTime = new Date();
     const lastEditTime = new Date();
+
+    // 400错误，为badRequest，一般是客户端请求格式错误，导致服务器无法处理请求
     if (title === '') {
         ctx.throw(400, '标题不能为空');
     }
@@ -50,8 +52,8 @@ export async function createArticle(ctx) {
 
 export async function getAllArticles(ctx) {
     const tag = ctx.query.tag;
-    const page = +ctx.query.page;
-    const limit = +ctx.query.limit || 4;
+    const page = +ctx.query.page; // +号放到赋值表达式中，会将String转成Number类型
+    const limit = +ctx.query.limit || 4; // +号放到赋值表达式中，会将String转成Number类型
     let skip = 0;
     let articleArr;
     let allPage;
@@ -64,8 +66,8 @@ export async function getAllArticles(ctx) {
     if (tag === '') {
         articleArr = await Article.find()
             .populate('tags')
-            .sort({ createTime: -1 })
-            .limit(limit)
+            .sort({ createTime: -1 }) // 时间排序
+            .limit(limit)             // 分页
             .skip(skip).catch(err => {
                 ctx.throw(500, '服务器内部错误');
             });
