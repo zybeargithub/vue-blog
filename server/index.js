@@ -1,7 +1,7 @@
 import koa from 'koa';
 import convert from 'koa-convert';
 import onerror from 'koa-onerror';
-import serve from 'koa-static';
+import serve from 'koa-static'; // 类似Nginx的静态文件服务器
 import mongoose from 'mongoose';
 import historyApiFallback from './middleware/historyApiFallback';
 import config from './configs';
@@ -25,6 +25,7 @@ const routerInfo = require('koa-router')();
 const app = new koa();
 
 // middleware
+// use执行的顺序决定中间件的执行顺序，先加先执行
 app.use(middleware());
 onerror(app); // 异常处理
 
@@ -61,6 +62,7 @@ routerInfo.get('*', async(ctx, next) => {
 app.use(routerInfo.routes());
 
 // 对路由admin直接走historyApiFallback,而不是用服务端渲染
+// convert转成koa2支持的promise方式的中间件
 app.use(convert(historyApiFallback({
     verbose: true,
     index: '/admin.html',
