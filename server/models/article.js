@@ -1,7 +1,8 @@
 import mongoose from 'mongoose';
-import moment from 'moment';
-moment.locale('zh-cn');
-const Schema = mongoose.Schema;
+import moment from 'moment'; // js日期处理类库
+moment.locale('zh-cn'); // 使用本地时间
+const Schema = mongoose.Schema; // Mongoose一切始于Schema，每个schema都会映射一个MongoDB Collection
+// 定义articel的结构体
 const articleSchema = new Schema({
     title: String,
     content: String,
